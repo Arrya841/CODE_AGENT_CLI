@@ -1,9 +1,10 @@
+from Agent.tools import execute_tool
 import os
 
 def start_cli():
 
     print("=" * 50)
-    print("              Welcome to the CLI!")
+    print("               Welcome to the CLI!")
     print("=" * 50)
 
     while True:
@@ -17,14 +18,18 @@ def start_cli():
             print("           help - Show this help message")
             print("           pwd - Print the current working directory")
             print("           ls - List files and directories in the current directory")
+            print("           count_files - Number of files and directories in the current directory")
             print("           exit or quit - Exit the CLI")
         elif user_input.lower() == "pwd":
-            current_directory = os.getcwd()
-            print(f"Agent >> Current working directory: {current_directory}")
+            result = execute_tool("pwd")
+            print(f"Agent >> Current working directory: {result}")
         elif user_input.lower() == "ls":
-            files_and_directories = os.listdir(os.getcwd())
+            result = execute_tool("ls")
             print("Agent >> Files and directories in the current directory:")
-            for item in files_and_directories:
+            for item in result:
                 print(f"           {item}")
+        elif user_input.lower() == "count_files":
+            result = execute_tool("count_files")
+            print(f"Agent >> Number of files and directories in the current directory: {result}")
         else:
             print("Agent >> Unknown command. Type 'help' for a list of available commands.")
