@@ -1,14 +1,17 @@
 import os
 import json
+from Agent.security import validate_path
 
 def get_current_directory():
     return os.getcwd()
 
 def list_files_and_directories(directory="."):
-    return os.listdir(directory)
+    safe_path = validate_path(directory)
+    return os.listdir(safe_path)
 
 def count_files(directory="."):
-    return len(os.listdir(directory))
+    safe_path = validate_path(directory)
+    return len(os.listdir(safe_path))
 
 TOOLS = {
     "pwd": get_current_directory,
@@ -29,6 +32,8 @@ def execute_tool(tool_name,arguments=None):
         return f"File system error: {error}"
     except TypeError as error:
         return f"Invalid tool arguments: {error}"
+    except PermissionError as error:
+        return f"Permission denied: {error}"
 
 def execute_json_tool(json_request):
     try:
