@@ -55,7 +55,7 @@ def start_cli():
             print("Agent >> Please enter a question.")
         elif user_input.lower() == "/history":
             messages = memory.get_history()
-            if not message:
+            if not messages:
                 print("Agent >> No conversation history.")
             else:   
                 for message in messages:
