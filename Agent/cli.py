@@ -10,6 +10,7 @@ def start_cli():
     print("=" * 50)
 
     memory = ConversationMemory()
+    max_turns = 10
 
     while True:
         user_input = input("\nYou >> ").strip() #.strip() removes any leading/trailing whitespace from the input
@@ -27,6 +28,7 @@ def start_cli():
             print("           ask <question> - Ask the AI")
             print("           clear - Clear conversation history")
             print("           /history - extracts the stored chat history")
+            print("           /context - to set the context window size like '/context 5'")
         elif user_input.lower() == "pwd":
             result = execute_tool("pwd")
             print(f"Agent >> Current working directory: {result}")
@@ -41,13 +43,26 @@ def start_cli():
         elif user_input.lower() == "clear":
             memory.clear()
             print("Agent >> Conversation cleared.")
+        elif user_input.lower().startswith("/context"):
+            parts = user_input.split()
+            if len(parts) != 2:
+                print("Agent >> Usage: /context <number>")
+            else:
+                try:
+                    requested_turns = int(parts[1])
+                    if requested_turns < 0:
+                        raise ValueError
+                    max_turns = requested_turns
+                    print(f"Agent >> Context window set to {max_turns} turns.")
+                except ValueError:
+                    print("Agent >> Context must be a non-negative integer.")
         elif user_input.lower().startswith("ask "):
             prompt = user_input[4:].strip()
             if not prompt:
                 print("Agent >> Please enter a question.")
                 continue
             try:
-                answer = ask_llm(prompt, memory)
+                answer = ask_llm(prompt, memory, max_turns)
                 print(f"Agent >> {answer}")
             except Exception as error:
                 print(f"Agent >> Request failed: {error}")

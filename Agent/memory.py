@@ -22,6 +22,14 @@ class ConversationMemory:
 
     def get_history(self):
         return list(self.history)
+    
+    def get_recent_history(self, max_turns):
+        if max_turns < 0:
+            raise ValueError("max_turns cannot be negative")
+        if max_turns == 0:
+            return []
+        max_messages = max_turns * 2
+        return self.history[-max_messages:]
 
     def clear(self):
         self.history.clear()
